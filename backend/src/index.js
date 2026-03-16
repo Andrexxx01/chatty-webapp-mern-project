@@ -7,13 +7,21 @@ dotenv.config();
 
 const app = express();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5001;
 
 app.use(express.json());
 
-app.use("/api/auth", authRoutes)
+app.use("/api/auth", authRoutes);
 
-app.listen(PORT, () => {
-    console.log("server is running on port:" + PORT);
-    connectDB();
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`server is running on port: ${PORT}`);
+    });
+  } catch (error) {
+    console.log("Failed to connect database:", error.message);
+  }
+};
+
+startServer();
